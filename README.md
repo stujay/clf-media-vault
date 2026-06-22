@@ -1,30 +1,24 @@
 # Media Vault | Sovereign CDN Manager
 
-A private, high-performance Digital Asset Manager (DAM) built to replace SaaS hosting for internal projects. Interfacing directly with S3 and CloudFront to provide a "Sovereign CDN" for web and email assets.
-
-## Aesthetic: "Quiet Luxury"
-- **Theme:** Modern Dark (Zinc/Slate) with high-contrast accents.
-- **Typography:** Pure Sans-Serif (`Inter`) for a technical, professional feel.
-- **Interactions:** Frosted-glass (backdrop-blur) navigation and smooth state transitions.
+A private, local-first Digital Asset Manager (DAM) built with SvelteKit 5 (Runes). It replaces SaaS-based media hosting (like Moosend) with a self-managed S3 + CloudFront pipeline.
 
 ## Features
-- **Batch Uploading:** Drag and drop multiple files concurrently to S3.
-- **Intelligent Filtering:** Top-level categorical tabs (Images, Videos, Docs) with dynamic sub-filtering for specific file extensions.
-- **Smart S3 Management:** Move or rename assets directly within the UI (handles S3 Copy/Delete and CloudFront Invalidation).
-- **Bulletproof Copying:** Multi-layered clipboard logic (modern API + legacy fallback) ensures one-click URL/HTML copying even over HTTP/IP-based access.
-- **CloudFront Integration:** Automatic cache invalidation on every upload, move, or rename.
+- **Asset Browser:** Real-time S3 bucket listing with thumbnail previews.
+- **Sovereign CDN:** All public traffic routes through `media.crackinglanguage.com`.
+- **One-Click Delivery:** Direct copy buttons for public URLs and pre-formatted HTML snippet for email templates.
+- **Drag & Drop:** Multi-file batch uploads to S3 with automatic CloudFront invalidation.
 
-## Technical Stack
-- **Framework:** SvelteKit 5 (Runes)
-- **Styling:** Tailwind CSS + PostCSS
-- **Icons:** FontAwesome
-- **Backend:** AWS SDK v3 (S3 & CloudFront)
-- **Authentication:** Uses local AWS profile (`~/.aws/credentials`)
+## Technical Architecture
+- **Storage:** AWS S3 (`cracking-language-media`)
+- **Distribution:** Amazon CloudFront (`media.crackinglanguage.com`)
+- **Backend:** SvelteKit Server Actions using `@aws-sdk/client-s3` and `@aws-sdk/client-cloudfront`.
+- **Auth:** Local AWS SDK credentials profile (ensure `~/.aws/credentials` is populated).
 
-## Deployment & Setup
-1. **Install Dependencies:** `npm install`
-2. **Environment:** Copy `.env.example` to `.env` and add your `CLOUDFRONT_DIST_ID`.
-3. **Run Dev:** `npm run dev -- --host --port 5180`
+## Usage
+1. **Browse:** Filter by prefix (e.g., `mailers/`) to isolate assets.
+2. **Upload:** Drag assets into the drop zone; define a prefix to auto-organize.
+3. **Delivery:** Click "Copy URL" for raw assets or "Copy Email HTML" to inject into your newsletters.
 
----
-*Built as a Sovereign Media Infrastructure prototype.*
+## Security & Protocol
+- **No Raw S3 URLs:** The application exclusively exposes CloudFront distributions to prevent internal bucket path leakage.
+- **Auto-Invalidation:** CloudFront invalidations are triggered automatically on all `upload` and `rename` operations.
